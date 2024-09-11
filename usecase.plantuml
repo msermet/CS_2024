@@ -16,7 +16,26 @@ actor :utilisateur Cafe: as userCafe
 actor :entreprise cliente: as entreprise
 actor :salarié entreprise cliente: as salarie
 
+admin --> UC_Gerer_Catalogue
+admin --> UC_Gerer_Entreprise
+admin --> UC_G_Cat_Produit
+admin --> UC_Gerer_Commande
+admin --> UC_G_Produit
+admin --> UC_MDP
+admin --> UC_Gerer_Compte
 
+entreprise --> UC_Gerer_Commande
+entreprise --> UC_MDP
 
+userCafe --> UC_Gerer_Catalogue
+userCafe --> UC_Gerer_Entreprise
+userCafe --> UC_G_Cat_Produit
+userCafe --> UC_Gerer_Commande
+userCafe --> UC_G_Produit
+userCafe --> UC_MDP
+userCafe --> UC_Gerer_Compte
+
+salarie --> UC_MDP
+salarie --> UC_Gerer_Commande
 
 @enduml
