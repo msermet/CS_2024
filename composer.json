@@ -1,0 +1,11 @@
+{
+    "name": "sermetm/question15-cs-1.1",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Maxime Sermet",
+            "email": "maximesermet075@gmail.com"
+        }
+    ],
+    "require": {}
+}
