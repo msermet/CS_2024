@@ -15,6 +15,8 @@ class Vue_Menu_MaTable extends Vue_Composant
                 <li><a href='?case=A'>cas A</a></li>
                 <li><a href='?case=B'>cas B</a></li>   
                 <li><a href='?case=maTable'>****Ma Table****</a></li>   
+                <li><a href='?case=utilisateur'>Utilisateurs</a></li>   
+
                    </ul>
             </nav> 
 ";

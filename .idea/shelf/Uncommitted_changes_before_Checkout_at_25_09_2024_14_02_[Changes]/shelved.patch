@@ -1,0 +1,104 @@
+Index: index.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?php\r\ninclude_once \"vendor/autoload.php\";\r\n\r\nuse App\\Utilitaire\\Vue;\r\nuse App\\Vue\\Vue_BienvenueAllerPagePrecedente;\r\nuse App\\Vue\\Vue_BienvenueAllerPageSuivante;\r\n\r\nif (isset($_REQUEST[\"case\"]))\r\n    $case = $_REQUEST[\"case\"];\r\nelse\r\n    $case = \"defaut\";\r\n\r\nif (isset($_REQUEST[\"action\"]))\r\n    $action = $_REQUEST[\"action\"];\r\nelse\r\n    $action = \"defaut\";\r\n\r\n$Vue = new Vue();\r\nswitch ($case) {\r\n    case \"defaut\":\r\n        switch ($action) {\r\n            case \"allerPageSuivante\":\r\n                $Vue->addToCorps(new Vue_BienvenueAllerPagePrecedente());\r\n                break;\r\n            case \"allerPagePrecedente\":\r\n                $Vue->addToCorps(new Vue_BienvenueAllerPageSuivante());\r\n                break;\r\n            case \"defaut\":\r\n                $Vue->addToCorps(new Vue_BienvenueAllerPageSuivante());\r\n                break;\r\n        }\r\n        break;\r\n\r\n\r\n}\r\n$Vue->afficher();
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/index.php b/index.php
+--- a/index.php	
++++ b/index.php	
+@@ -2,8 +2,10 @@
+ include_once "vendor/autoload.php";
+ 
+ use App\Utilitaire\Vue;
+-use App\Vue\Vue_BienvenueAllerPagePrecedente;
+-use App\Vue\Vue_BienvenueAllerPageSuivante;
++use App\Vue\Vue_BienvenueAllerPage1;
++use App\Vue\Vue_BienvenueAllerPage2;
++use App\Vue\Vue_BienvenueAllerPage3
++    ;
+ 
+ if (isset($_REQUEST["case"]))
+     $case = $_REQUEST["case"];
+@@ -19,14 +21,17 @@
+ switch ($case) {
+     case "defaut":
+         switch ($action) {
+-            case "allerPageSuivante":
+-                $Vue->addToCorps(new Vue_BienvenueAllerPagePrecedente());
++            case "allerPage2":
++                $Vue->addToCorps(new Vue_BienvenueAllerPage2());
+                 break;
+-            case "allerPagePrecedente":
+-                $Vue->addToCorps(new Vue_BienvenueAllerPageSuivante());
++            case "allerPage1":
++                $Vue->addToCorps(new Vue_BienvenueAllerPage1());
++                break;
++            case "allerPage3":
++                $Vue->addToCorps(new Vue_BienvenueAllerPage3());
+                 break;
+             case "defaut":
+-                $Vue->addToCorps(new Vue_BienvenueAllerPageSuivante());
++                $Vue->addToCorps(new Vue_BienvenueAllerPage1());
+                 break;
+         }
+         break;
+Index: src/Vue/Vue_BienvenueAllerPageSuivante.php
+===================================================================
+diff --git a/src/Vue/Vue_BienvenueAllerPageSuivante.php b/src/Vue/Vue_BienvenueAllerPage2.php
+rename from src/Vue/Vue_BienvenueAllerPageSuivante.php
+rename to src/Vue/Vue_BienvenueAllerPage2.php
+--- a/src/Vue/Vue_BienvenueAllerPageSuivante.php	
++++ b/src/Vue/Vue_BienvenueAllerPage2.php	
+@@ -2,7 +2,7 @@
+ namespace App\Vue;
+ use App\Utilitaire\Vue_Composant;
+ 
+-class Vue_BienvenueAllerPageSuivante extends Vue_Composant
++class Vue_BienvenueAllerPage2 extends Vue_Composant
+ {
+     private string $msgErreur;
+     public function __construct(string $msgErreur ="")
+@@ -17,9 +17,9 @@
+ <div  style='    width: 50%;    display: block;    margin: auto;'>  
+   Bienvenue sur le site de la société Café !
+   <form action='index.php' method='post'>
+-        <input type='hidden' name='action' value='allerPageSuivante'>
+-        <button type='submit' id='submit' name='action' value='allerPageSuivante' >
+-            Aller à la page suivante
++        <input type='hidden' name='action' value='allerPage2'>
++        <button type='submit' id='submit' name='action' value='allerPage3' >
++            Aller page 2
+         </button>
+   </form>
+   
+Index: src/Vue/Vue_BienvenueAllerPagePrecedente.php
+===================================================================
+diff --git a/src/Vue/Vue_BienvenueAllerPagePrecedente.php b/src/Vue/Vue_BienvenueAllerPage1.php
+rename from src/Vue/Vue_BienvenueAllerPagePrecedente.php
+rename to src/Vue/Vue_BienvenueAllerPage1.php
+--- a/src/Vue/Vue_BienvenueAllerPagePrecedente.php	
++++ b/src/Vue/Vue_BienvenueAllerPage1.php	
+@@ -2,7 +2,7 @@
+ namespace App\Vue;
+ use App\Utilitaire\Vue_Composant;
+ 
+-class Vue_BienvenueAllerPagePrecedente extends Vue_Composant
++class Vue_BienvenueAllerPage1 extends Vue_Composant
+ {
+     private string $msgErreur;
+     public function __construct(string $msgErreur ="")
+@@ -17,9 +17,9 @@
+ <div  style='    width: 50%;    display: block;    margin: auto;'>  
+     Bienvenue sur le site de la société Café !
+     <form action='index.php' method='post'>
+-            <input type='hidden' name='action' value='allerPagePrecedente'>
+-            <button type='submit' id='submit' name='action' value='allerPagePrecedente' >
+-                Aller à la page précédente
++            <input type='hidden' name='action' value='allerPage1'>
++            <button type='submit' id='submit' name='action' value='allerPage2' >
++                Aller page 1
+             </button>
+     </form>
+ </div>
