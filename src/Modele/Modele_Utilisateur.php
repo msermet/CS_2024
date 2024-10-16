@@ -201,4 +201,34 @@ SET motDePasse = :parammotDePasse ');
         return $reponse;
     }
 
+    /**
+     * @param $connexionPDO
+     * @param $idUtilisateur
+     * @param $motDePasseClair
+     * @return mixed
+     */
+    static function Utilisateur_Modifier_RGPD($idUtilisateur,$RGPD)
+
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+
+        $requetePreparee = $connexionPDO->prepare(
+            'UPDATE `utilisateur` 
+SET aAccepteRGPD = :paramRGPD WHERE id_utilisateur = :idUtilisateur');
+        $requetePreparee->bindParam('paramRGPD', $RGPD);
+        $requetePreparee->bindParam('idUtilisateur', $idUtilisateur);
+        $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        return $reponse;
+    }
+
+    static function Utilisateur_Select_RGPD($idUtilisateur)
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+        $requetePreparee = $connexionPDO->prepare('select aAccepteRGPD from `utilisateur` where idUtilisateur = :paramId');
+        $requetePreparee->bindParam('paramId', $idUtilisateur);
+        $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        $etudiant = $requetePreparee->fetch(PDO::FETCH_ASSOC);
+        return $etudiant;
+    }
+
 }

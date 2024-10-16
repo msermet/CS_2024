@@ -71,6 +71,7 @@ Rue la Transparence
 Si vous estimez, après avoir contacté la société ABCD, que vos droits « Informatique et Libertés » ne sont pas respectés, vous pouvez adresser une réclamation en ligne à la CNIL.
 
 ";
+
         //je crois avoir oublié la fin de la page...
         return $str;
     }

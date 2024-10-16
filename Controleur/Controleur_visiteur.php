@@ -42,9 +42,21 @@ switch ($action) {
                         $_SESSION["idUtilisateur"] = $utilisateur["idUtilisateur"];
                         //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
                         $_SESSION["idCategorie_utilisateur"] = $utilisateur["idCategorie_utilisateur"];
-                        echo "idCategorie_utilisateur : " . $_SESSION["idCategorie_utilisateur"];
+                        // echo "idCategorie_utilisateur : " . $_SESSION["idCategorie_utilisateur"];
                         //error_log("idCategorie_utilisateur : " . $_SESSION["idCategorie_utilisateur"]);
                       //  var_dump($utilisateur);
+
+
+                        //ici
+                        if (Modele_Utilisateur::Utilisateur_Select_RGPD($_SESSION["idUtilisateur"])==0) {
+                            include "./Controleur/Controleur_AccepterRGPD.php";
+                            $msgError = "RGPD non accepté";
+                            $Vue->addToCorps(new Vue_Connexion_Formulaire_client($msgError));
+                            $erreur = true;
+                        } else {
+                            $msgError = "RGPD non accepté";
+                            $Vue->addToCorps(new Vue_Connexion_Formulaire_client($msgError));
+                        }
                         switch ($utilisateur["idCategorie_utilisateur"]) {
                             case 1:
                                 $_SESSION["typeConnexionBack"] = "administrateurLogiciel"; //Champ inutile, mais bien pour voir ce qu'il se passe avec des étudiants !
