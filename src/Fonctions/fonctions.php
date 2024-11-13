@@ -10,3 +10,4 @@ function GenereMDP($nbChar) :string{
 
     return "secret";
 }
+
