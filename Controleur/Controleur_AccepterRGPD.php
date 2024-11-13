@@ -1,5 +1,7 @@
 <?php
 
+use App\Modele\Modele_Entreprise;
+use App\Modele\Modele_Salarie;
 use App\Modele\Modele_Utilisateur;
 use App\Vue\Vue_Connexion_Formulaire_client;
 use App\Vue\Vue_ConsentementRGPD;

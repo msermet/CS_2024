@@ -10,8 +10,3 @@ function GenereMDP($nbChar) :string{
 
     return "secret";
 }
-
-function CalculComplexiteMdp($mdp) :int{
-
-
-}
