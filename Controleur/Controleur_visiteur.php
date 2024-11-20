@@ -17,6 +17,10 @@ $Vue->setEntete(new Vue_Structure_Entete());
 
 switch ($action) {
     case "reinitmdpconfirm":
+        $utilisateur = Modele_Utilisateur::Utilisateur_Select_ParLogin($_REQUEST["compte"]);
+
+        $email = $utilisateur["login"];  // Récupérer l'email de l'utilisateur
+//        $pseudo = $utilisateur["pseudo"]; // Récupérer le pseudo de l'utilisateur
 
         $mail = new PHPMailer;
         $mail->isSMTP();
@@ -24,11 +28,8 @@ switch ($action) {
         $mail->Port = 1025; //Port non crypté
         $mail->SMTPAuth = false; //Pas d’authentification
         $mail->SMTPAutoTLS = false; //Pas de certificat TLS
-//        $utilisateur = Modele_Utilisateur::Utilisateur_Select_ParLogin($_REQUEST["compte"]);
-//        $mail = Modele_Utilisateur::Utilisateur_SelectMail_ParId($utilisateur["idUtilisateur"]);
-//        print_r($mail);
-        $mail->setFrom("ail", 'admin');
-        $mail->addAddress('client@labrulerfhgfiecomtoise.fr', 'Mon client');
+        $mail->setFrom('test@labruleriefghcomtoise.fr', 'admin');
+        $mail->addAddress($email, "oui");
         if ($mail->addReplyTo('test@labruleriechgomtoise.fr', 'admin')) {
             $mail->Subject = 'Objet : Bonjour !';
             $mail->isHTML(false);
