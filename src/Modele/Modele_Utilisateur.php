@@ -55,6 +55,16 @@ class Modele_Utilisateur
         return $etudiant;
     }
 
+    static function Utilisateur_SelectMail_ParId($idUtilisateur)
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+        $requetePreparee = $connexionPDO->prepare('select login from `utilisateur` where idUtilisateur = :paramId');
+        $requetePreparee->bindParam('paramId', $idUtilisateur);
+        $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        $etudiant = $requetePreparee->fetch(PDO::FETCH_ASSOC);
+        return $etudiant;
+    }
+
     /**
      * @param $connexionPDO
      * @param $idUtilisateur

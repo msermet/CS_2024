@@ -18,7 +18,30 @@ $Vue->setEntete(new Vue_Structure_Entete());
 switch ($action) {
     case "reinitmdpconfirm":
 
-          //comme un qqc qui manque... je dis ça ! je dis rien !
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->Host = '127.0.0.1';
+        $mail->Port = 1025; //Port non crypté
+        $mail->SMTPAuth = false; //Pas d’authentification
+        $mail->SMTPAutoTLS = false; //Pas de certificat TLS
+//        $utilisateur = Modele_Utilisateur::Utilisateur_Select_ParLogin($_REQUEST["compte"]);
+//        $mail = Modele_Utilisateur::Utilisateur_SelectMail_ParId($utilisateur["idUtilisateur"]);
+//        print_r($mail);
+        $mail->setFrom("ail", 'admin');
+        $mail->addAddress('client@labrulerfhgfiecomtoise.fr', 'Mon client');
+        if ($mail->addReplyTo('test@labruleriechgomtoise.fr', 'admin')) {
+            $mail->Subject = 'Objet : Bonjour !';
+            $mail->isHTML(false);
+            $mail->Body = "Corps du message pour mon client :)";
+
+            if (!$mail->send()) {
+                $msg = 'Désolé, quelque chose a mal tourné. Veuillez réessayer plus tard.';
+            } else {
+                $msg = 'Message envoyé ! Merci de nous avoir contactés.';
+            }
+        } else {
+            $msg = 'Il doit manquer qqc !';
+        }
 
         $Vue->addToCorps(new Vue_Mail_Confirme());
 
