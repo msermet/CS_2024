@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'vendor_name/cafe',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => 'fe2e6d57ced0fdd28a11cdd315f8e9e5882e0d05',
+        'pretty_version' => 'dev-Application---ReinitialisationMail',
+        'version' => 'dev-Application---ReinitialisationMail',
+        'reference' => 'c5e4431b896c561d58e894a196eb7784a311bd38',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -272,9 +272,9 @@
             'dev_requirement' => true,
         ),
         'vendor_name/cafe' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => 'fe2e6d57ced0fdd28a11cdd315f8e9e5882e0d05',
+            'pretty_version' => 'dev-Application---ReinitialisationMail',
+            'version' => 'dev-Application---ReinitialisationMail',
+            'reference' => 'c5e4431b896c561d58e894a196eb7784a311bd38',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

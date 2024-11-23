@@ -26,7 +26,7 @@ switch ($action) {
             case 2:
                 $_SESSION["typeConnexionBack"] = "gestionnaireCatalogue";
                 $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
-                $Vue->addToCorps(new \App\Vue\Vue_AfficherMessage("Bienvenue " . $_REQUEST["compte"]));
+//                $Vue->addToCorps(new \App\Vue\Vue_AfficherMessage("Bienvenue " . $_REQUEST["compte"]));
                 break;
             case 3:
                 $_SESSION["typeConnexionBack"] = "entrepriseCliente";
