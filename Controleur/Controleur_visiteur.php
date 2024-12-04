@@ -2,6 +2,7 @@
 
 
 use App\Modele\Modele_Entreprise;
+use App\Modele\Modele_Jeton;
 use App\Modele\Modele_Salarie;
 use App\Modele\Modele_Utilisateur;
 use App\Vue\Vue_Connexion_Formulaire_client;
@@ -19,6 +20,40 @@ $Vue->setEntete(new Vue_Structure_Entete());
 
 
 switch ($action) {
+    case "reinitmdptoken":
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->Host = '127.0.0.1';
+        $mail->Port = 1025; // Port for non-encrypted sending
+        $mail->SMTPAuth = false; // No authentication required
+        $mail->SMTPAutoTLS = false; // No TLS required
+        $mail->setFrom('admin@cafe.fr', 'admin');
+
+        // Retrieve email from request and find user
+        $email = $_REQUEST['email-token'];
+        $utilisateur = Modele_Utilisateur::Utilisateur_Select_ParLogin($email);
+
+        if ($utilisateur) {
+            // Generate token
+            $valeurToken = Modele_Jeton::Insert($utilisateur['idUtilisateur']);
+
+            // Set email recipient and body
+            $mail->addAddress($email);
+            $mail->Subject = 'Objet : Demande de réinitialisation de mot de passe';
+            $mail->isHTML(true);
+            $mail->Body = "Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe : <a href='http://localhost:8000/index.php?action=token&token=$valeurToken'>Lien à cliquer</a>";
+
+            // Send email
+            if ($mail->send()) {
+                $Vue->addToCorps(new Vue_Mail_Confirme());
+            } else {
+                $Vue->addToCorps(new Vue_Connexion_Formulaire_client("Échec de l'envoi de l'e-mail."));
+            }
+        } else {
+            $Vue->addToCorps(new Vue_Connexion_Formulaire_client("Utilisateur introuvable."));
+        }
+        break;
+
     case "reinitmdpconfirm":
         $mail = new PHPMailer;
         $mail->isSMTP();
@@ -45,6 +80,7 @@ switch ($action) {
         $Vue->addToCorps(new Vue_Mail_ReinitMdp());
 
         break;
+
 
     case "Se connecter" :
         if (isset($_REQUEST["compte"]) and isset($_REQUEST["password"])) {
