@@ -18,32 +18,27 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 $Vue->setEntete(new Vue_Structure_Entete());
 
-
 switch ($action) {
     case "reinitmdptoken":
         $mail = new PHPMailer;
         $mail->isSMTP();
         $mail->Host = '127.0.0.1';
-        $mail->Port = 1025; // Port for non-encrypted sending
-        $mail->SMTPAuth = false; // No authentication required
-        $mail->SMTPAutoTLS = false; // No TLS required
+        $mail->Port = 1025;
+        $mail->SMTPAuth = false;
+        $mail->SMTPAutoTLS = false;
         $mail->setFrom('admin@cafe.fr', 'admin');
 
-        // Retrieve email from request and find user
         $email = $_REQUEST['email-token'];
         $utilisateur = Modele_Utilisateur::Utilisateur_Select_ParLogin($email);
 
         if ($utilisateur) {
-            // Generate token
             $valeurToken = Modele_Jeton::Insert($utilisateur['idUtilisateur']);
 
-            // Set email recipient and body
             $mail->addAddress($email);
             $mail->Subject = 'Objet : Demande de réinitialisation de mot de passe';
             $mail->isHTML(true);
             $mail->Body = "Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe : <a href='http://localhost:8000/index.php?action=token&token=$valeurToken'>Lien à cliquer</a>";
 
-            // Send email
             if ($mail->send()) {
                 $Vue->addToCorps(new Vue_Mail_Confirme());
             } else {
@@ -53,6 +48,14 @@ switch ($action) {
             $Vue->addToCorps(new Vue_Connexion_Formulaire_client("Utilisateur introuvable."));
         }
         break;
+
+    case "token":
+        $token = isset($_GET['token']) ? $_GET['token'] : null;
+        if ($token) {
+            $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp($token));
+            break;
+        }
+
 
     case "reinitmdpconfirm":
         $mail = new PHPMailer;
@@ -81,6 +84,33 @@ switch ($action) {
 
         break;
 
+    case "choixmdp":
+        if (isset($_POST['mdp1']) && isset($_POST['mdp2']) && isset($_SESSION['jeton_valide']) && $_POST['mdp1'] === $_POST['mdp2']) {
+            $nouveauMdp = $_POST['mdp1'];
+
+            // Vérifier si l'utilisateur est toujours correct en utilisant le token
+            $jetonInfo = Modele_Jeton::Search($_SESSION['jeton_valide']);
+
+            if ($jetonInfo) {
+                $idUtilisateur = $jetonInfo['idUtilisateur'];
+
+                // Mettre à jour le mot de passe dans la base de données
+                if (Modele_Utilisateur::Utilisateur_Modifier_motDePasse($idUtilisateur, password_hash($nouveauMdp, PASSWORD_DEFAULT))) {
+                    // Supprimer le jeton après usage
+                    Modele_Jeton::Update($_SESSION['jeton_valide']);
+                    unset($_SESSION['jeton_valide'], $_SESSION['id_utilisateur']);
+
+                    $Vue->addToCorps(new Vue_Connexion_Formulaire_client("Mot de passe mis à jour avec succès."));
+                } else {
+                    $Vue->addToCorps(new Vue_Connexion_Formulaire_client("Erreur lors de la mise à jour du mot de passe."));
+                }
+            } else {
+                $Vue->addToCorps(new Vue_Connexion_Formulaire_client("Jeton invalide ou expiré."));
+            }
+        } else {
+            $Vue->addToCorps(new Vue_Connexion_Formulaire_client("Les mots de passe ne correspondent pas ou sont invalides."));
+        }
+        break;
 
     case "Se connecter" :
         if (isset($_REQUEST["compte"]) and isset($_REQUEST["password"])) {
