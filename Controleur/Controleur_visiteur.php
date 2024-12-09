@@ -37,7 +37,8 @@ switch ($action) {
             $mail->addAddress($email);
             $mail->Subject = 'Objet : Demande de réinitialisation de mot de passe';
             $mail->isHTML(true);
-            $mail->Body = "Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe : <a href='http://localhost:8000/index.php?action=token&token=$valeurToken'>Lien à cliquer</a>";
+            $valeurTokenEncode = urlencode($valeurToken);
+            $mail->Body = "Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe : <a href='http://localhost:8000/index.php?action=token&token=$valeurTokenEncode'>Lien à cliquer</a>";
 
             if ($mail->send()) {
                 $Vue->addToCorps(new Vue_Mail_Confirme());
@@ -50,11 +51,27 @@ switch ($action) {
         break;
 
     case "token":
-        $token = isset($_GET['token']) ? $_GET['token'] : null;
+        $token = isset($_GET['token']) ? rawurldecode($_GET['token']) : null;
         if ($token) {
-            $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp($token));
-            break;
+            // Ajoutez un log pour vérifier le token avant la recherche
+            error_log("Verification du token avant recherche: " . $token);
+
+            // Recherche du jeton
+            $jetonInfo = Modele_Jeton::Search($token);
+            // Vérifiez si des informations sur le jeton ont été renvoyées
+            if ($jetonInfo) {
+                $_SESSION['jeton_valide'] = $token;
+                $_SESSION['id_utilisateur'] = $jetonInfo['idUtilisateur'];
+                $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp($token));
+            } else {
+                error_log("Jeton invalide ou expiré.");
+                $Vue->addToCorps(new Vue_Connexion_Formulaire_client("Jeton invalide ou expiré."));
+            }
+        } else {
+            error_log("Aucun token fourni.");
+            $Vue->addToCorps(new Vue_Connexion_Formulaire_client("Aucun token fourni."));
         }
+        break;
 
 
     case "reinitmdpconfirm":
@@ -118,10 +135,11 @@ switch ($action) {
 
             $utilisateur = Modele_Utilisateur::Utilisateur_Select_ParLogin($_REQUEST["compte"]);
 
+
             if ($utilisateur != null) {
                 //error_log("utilisateur : " . $utilisateur["idUtilisateur"]);
                 if ($utilisateur["desactiver"] == 0) {
-                    if ($_REQUEST["password"] == $utilisateur["motDePasse"] ||$_SESSION["motdepasseProv"]==$utilisateur["motDePasse"]) {
+                    if ($_REQUEST["password"] == $utilisateur["motDePasse"] || password_verify($_REQUEST["password"], $utilisateur["motDePasse"]) || $_SESSION["motdepasseProv"]==$utilisateur["motDePasse"]) {
                         $_SESSION["idUtilisateur"] = $utilisateur["idUtilisateur"];
                         //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
                         $_SESSION["idCategorie_utilisateur"] = $utilisateur["idCategorie_utilisateur"];
@@ -136,7 +154,7 @@ switch ($action) {
                             //                            $msgError = "RGPD non accepté";
                             //                            $Vue->addToCorps(new Vue_Connexion_Formulaire_client($msgError));
                             //                            $erreur = true;
-                        } else
+                        } else {
                             if (isset($_SESSION["motdepasseProv"])) {
                                 include "./Controleur/Controleur_Gerer_monCompte.php";
                             }
@@ -168,6 +186,7 @@ switch ($action) {
                                     $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
                                     break;
                             }
+                        }
                     } else {//mot de passe pas bon
                         $msgError = "Mot de passe erroné";
 

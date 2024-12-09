@@ -55,6 +55,16 @@ class Modele_Utilisateur
         return $etudiant;
     }
 
+    static function Utilisateur_SelectId_ParToken($token)
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+        $requetePreparee = $connexionPDO->prepare('select idUtilisateur from `token` where valeur = :paramToken');
+        $requetePreparee->bindParam('paramToken', $token);
+        $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        $etudiant = $requetePreparee->fetch(PDO::FETCH_ASSOC);
+        return $etudiant;
+    }
+
     static function Utilisateur_SelectMail_ParId($idUtilisateur)
     {
         $connexionPDO = Singleton_ConnexionPDO::getInstance();
@@ -225,10 +235,10 @@ SET motDePasse = :parammotDePasse ');
             'UPDATE `utilisateur` 
         SET aAccepteRGPD = :paramRGPD, dateAcceptionRGPD = :dateAcceptionRGPD, IP = :IP WHERE idUtilisateur = :idUtilisateur'
         );
-        $requetePreparee->bindParam('paramRGPD', $RGPD);
-        $requetePreparee->bindParam('idUtilisateur', $idUtilisateur);
-        $requetePreparee->bindParam('dateAcceptionRGPD', $formattedDate); // Bind the formatted date string
-        $requetePreparee->bindParam('IP', $ip);
+        $requetePreparee->bindValue('paramRGPD', $RGPD);
+        $requetePreparee->bindValue('idUtilisateur', $idUtilisateur);
+        $requetePreparee->bindValue('dateAcceptionRGPD', $formattedDate);
+        $requetePreparee->bindValue('IP', $ip);
 
         $reponse = $requetePreparee->execute(); // $reponse is a boolean indicating the status of the query
         return $reponse;
