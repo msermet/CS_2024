@@ -46,6 +46,20 @@ switch ($action) {
             $Vue->addToCorps(new Vue_Utilisateur_Changement_MDP("<label><b>Vous n'avez pas saisi le bon mot de passe</b></label>", "Gerer_MonCompte_Salarie"));
         }
         break;
+
+    case "DesactiverCompte":
+        if (isset($_SESSION["idSalarie"])) {
+            $userId = $_SESSION["idSalarie"];
+            Modele_Salarie::Desactiver_Compte($userId);
+            session_destroy();
+            unset($_SESSION);
+            $Vue->setEntete(new Vue_Structure_Entete());
+            $Vue->addToCorps(new Vue_Connexion_Formulaire_client("<label><b>Votre compte a été désactivé avec succès.</b></label>"));
+        } else {
+            $Vue->addToCorps(new Vue_Compte_Administration_Gerer("<label><b>Une erreur est survenue. Veuillez réessayer.</b></label>", "Gerer_MonCompte_Salarie"));
+        }
+        break;
+
     case "SeDeconnecter":
         //L'utilisateur a cliqué sur "se déconnecter"
         session_destroy();

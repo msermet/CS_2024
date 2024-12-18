@@ -162,5 +162,20 @@ WHERE idSalarie = :paramidUtilisateur');
         $reponse = $requetePreparee->execute();
     }
 
+    public static function Desactiver_Compte(int $salarieId): void
+    {
+        // Connexion à la base de données
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+
+        // Mise à jour pour désactiver le compte (modifier actif ou is_active à 0)
+        $requetePreparee = $connexionPDO->prepare("
+        UPDATE utilisateur
+        SET desactiver = 1
+        WHERE idUtilisateur = :idSalarie
+    ");
+        $requetePreparee->bindParam(':idSalarie', $salarieId, \PDO::PARAM_INT);
+        $requetePreparee->execute();
+    }
+
 
 }
