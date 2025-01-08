@@ -2,7 +2,7 @@
 //error_log("page debut");
 session_start();
 include_once "vendor/autoload.php";
-require_once 'src/Fonctions/CRSF.php'; // Inclure le fichier contenant les fonctions CSRF
+require_once 'src/Fonctions/CRSF.php';
 
 use App\Modele\Modele_Token;
 use App\Utilitaire\Vue;
@@ -46,7 +46,6 @@ if (isset($_REQUEST["action"])) {
 // utiliser en débuggage pour avoir le type de connexion
 //$Vue->addToCorps(new Vue_AfficherMessage("<br>Action $action<br>"));
 
-// Vérifier les requêtes POST pour le jeton CSRF
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
         die('CSRF token validation failed');
