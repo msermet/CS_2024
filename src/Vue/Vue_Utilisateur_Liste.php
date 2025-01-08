@@ -22,7 +22,7 @@ class Vue_Utilisateur_Liste extends Vue_Composant
          <tr>
             <td colspan="6" style="text-align: center">
                 <form style=\'display: contents\'>
-                 
+                 ".genereChampHiddenCSRF()."
                     <input type="hidden" name="case" value="Gerer_utilisateur">
                     <input type="hidden" value="" name="action">
  
@@ -61,7 +61,7 @@ class Vue_Utilisateur_Liste extends Vue_Composant
 
                 $str .=  "
                 <form style='display: contents'>
-                
+                ".genereChampHiddenCSRF()."
                         <input type='hidden' name='case' value='Gerer_utilisateur'>
                         
                         <input type='hidden' value='$iemeUtilisateur[idUtilisateur]' name='idUtilisateur'>
@@ -80,7 +80,7 @@ class Vue_Utilisateur_Liste extends Vue_Composant
                         $str .=  "
             <td>
                 <form style='display: contents'>
-                    
+                    ".genereChampHiddenCSRF()."
                     <input type='hidden' name='case' value='Gerer_utilisateur'>
                     
                         <input type='hidden' value='$iemeUtilisateur[idUtilisateur]' name='idUtilisateur'>
@@ -99,7 +99,7 @@ class Vue_Utilisateur_Liste extends Vue_Composant
                     case 1:
                         $str .=  "
             <td>
-                <form style='display: contents'>
+                <form style='display: contents'>".genereChampHiddenCSRF()."
                         <input type='hidden' name='case' value='Gerer_utilisateur'>    
                         <input type='hidden' value='$iemeUtilisateur[idUtilisateur]' name='idUtilisateur'>
                         <button type='submit' 
